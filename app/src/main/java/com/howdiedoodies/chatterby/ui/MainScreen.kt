@@ -12,10 +12,13 @@ import com.howdiedoodies.chatterby.data.Favorite
 import com.howdiedoodies.chatterby.viewmodel.FavoriteViewModel
 
 @Composable
-fun MainScreen(viewModel: FavoriteViewModel = viewModel()) {
+fun MainScreen(navController: NavController, viewModel: FavoriteViewModel = viewModel()) {
     val favorites by viewModel.favorites.collectAsState(initial = emptyList())
     
     Column(modifier = Modifier.fillMaxSize()) {
+        Button(onClick = { navController.navigate("search") }) {
+            Text("Go to Search")
+        }
         Text(
             text = "Favorites",
             style = MaterialTheme.typography.headlineMedium,
