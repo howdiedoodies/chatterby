@@ -7,12 +7,10 @@ import androidx.room.TypeConverters
 import android.content.Context
 
 @Database(entities = [Favorite::class], version = 1, exportSchema = false)
-@TypeConverters(TypeConverters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun favoriteDao(): FavoriteDao
 
     companion object {
-        @Volatile
         private var INSTANCE: AppDatabase? = null
 
         fun getDatabase(context: Context): AppDatabase {

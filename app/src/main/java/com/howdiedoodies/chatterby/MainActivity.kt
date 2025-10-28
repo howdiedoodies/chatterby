@@ -14,7 +14,9 @@ import com.howdiedoodies.chatterby.ui.MainScreen
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        WebView.setWebContentsDebuggingEnabled(true) // For debugging
+        if (BuildConfig.DEBUG) {
+            WebView.setWebContentsDebuggingEnabled(true)
+        }
         setContent {
             ChatterbyTheme {
                 Surface(
