@@ -8,5 +8,9 @@ import java.util.Date
 @Entity(tableName = "favorites")
 data class Favorite(
     @PrimaryKey val username: String,
-    val lastOnline: Long? = null   // ← LONG, NOT DATE
+    val lastOnline: Long? = null,
+    val isOnline: Boolean = false,
+    val thumbnailPath: String? = null,
+    val currentGoal: Int? = null,
+    val targetGoal: Int? = null
 )

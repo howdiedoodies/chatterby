@@ -5,10 +5,9 @@ import kotlinx.coroutines.flow.Flow
 import java.util.Date
 
 @Dao
-@TypeConverters(TypeConverters::class)
 interface FavoriteDao {
-    @Query("SELECT * FROM favorites WHERE lastOnline > :timestamp")
-    fun getRecentlyOnline(timestamp: Long): List<Favorite>
+    @Query("SELECT * FROM favorites")
+    fun getAll(): Flow<List<Favorite>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(favorite: Favorite)
@@ -17,7 +16,7 @@ interface FavoriteDao {
     suspend fun delete(favorite: Favorite)
 
     @Query("UPDATE favorites SET isOnline = :online, lastOnline = :timestamp WHERE username = :username")
-    suspend fun updateStatus(username: String, online: Boolean, timestamp: Date?)
+    suspend fun updateStatus(username: String, online: Boolean, timestamp: Long?)
 
     @Query("UPDATE favorites SET thumbnailPath = :path WHERE username = :username")
     suspend fun updateThumbnail(username: String, path: String?)
