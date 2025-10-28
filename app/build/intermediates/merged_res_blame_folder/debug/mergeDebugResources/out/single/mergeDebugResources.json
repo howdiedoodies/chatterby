@@ -1,0 +1,58 @@
+[
+    {
+        "merged": "com.howdiedoodies.chatterby.app-debug-67:/layout_dialog_prefs.xml.flat",
+        "source": "com.howdiedoodies.chatterby.app-main-69:/layout/dialog_prefs.xml"
+    },
+    {
+        "merged": "com.howdiedoodies.chatterby.app-debug-67:/drawable_badge_bg.xml.flat",
+        "source": "com.howdiedoodies.chatterby.app-main-69:/drawable/badge_bg.xml"
+    },
+    {
+        "merged": "com.howdiedoodies.chatterby.app-debug-67:/xml_data_extraction_rules.xml.flat",
+        "source": "com.howdiedoodies.chatterby.app-main-69:/xml/data_extraction_rules.xml"
+    },
+    {
+        "merged": "com.howdiedoodies.chatterby.app-debug-67:/xml_backup_rules.xml.flat",
+        "source": "com.howdiedoodies.chatterby.app-main-69:/xml/backup_rules.xml"
+    },
+    {
+        "merged": "com.howdiedoodies.chatterby.app-debug-67:/layout_item_search_result.xml.flat",
+        "source": "com.howdiedoodies.chatterby.app-main-69:/layout/item_search_result.xml"
+    },
+    {
+        "merged": "com.howdiedoodies.chatterby.app-debug-67:/menu_fave_menu.xml.flat",
+        "source": "com.howdiedoodies.chatterby.app-main-69:/menu/fave_menu.xml"
+    },
+    {
+        "merged": "com.howdiedoodies.chatterby.app-debug-67:/layout_activity_main.xml.flat",
+        "source": "com.howdiedoodies.chatterby.app-main-69:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.howdiedoodies.chatterby.app-debug-67:/layout_fragment_room.xml.flat",
+        "source": "com.howdiedoodies.chatterby.app-main-69:/layout/fragment_room.xml"
+    },
+    {
+        "merged": "com.howdiedoodies.chatterby.app-debug-67:/layout_fragment_search.xml.flat",
+        "source": "com.howdiedoodies.chatterby.app-main-69:/layout/fragment_search.xml"
+    },
+    {
+        "merged": "com.howdiedoodies.chatterby.app-debug-67:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.howdiedoodies.chatterby.app-main-69:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "com.howdiedoodies.chatterby.app-debug-67:/layout_item_favorite.xml.flat",
+        "source": "com.howdiedoodies.chatterby.app-main-69:/layout/item_favorite.xml"
+    },
+    {
+        "merged": "com.howdiedoodies.chatterby.app-debug-67:/drawable_ic_chat.xml.flat",
+        "source": "com.howdiedoodies.chatterby.app-main-69:/drawable/ic_chat.xml"
+    },
+    {
+        "merged": "com.howdiedoodies.chatterby.app-debug-67:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.howdiedoodies.chatterby.app-main-69:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.howdiedoodies.chatterby.app-debug-67:/drawable_ic_avatar_placeholder.xml.flat",
+        "source": "com.howdiedoodies.chatterby.app-main-69:/drawable/ic_avatar_placeholder.xml"
+    }
+]

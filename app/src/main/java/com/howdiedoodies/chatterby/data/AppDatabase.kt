@@ -3,9 +3,11 @@ package com.howdiedoodies.chatterby.data
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import android.content.Context
 
 @Database(entities = [Favorite::class], version = 1, exportSchema = false)
+@TypeConverters(TypeConverters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun favoriteDao(): FavoriteDao
 
