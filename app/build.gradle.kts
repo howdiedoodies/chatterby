@@ -41,6 +41,7 @@ android {
     buildFeatures {
         compose = true
         viewBinding = false
+        buildConfig = true
     }
     signingConfigs {
         named("debug") {
@@ -61,8 +62,10 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.8.2")
     implementation(platform("androidx.compose:compose-bom:2023.10.01"))
     implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.runtime:runtime")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("org.jsoup:jsoup:1.17.2")
     implementation("androidx.room:room-runtime:2.8.3")
