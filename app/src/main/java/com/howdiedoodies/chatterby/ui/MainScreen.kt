@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.howdiedoodies.chatterby.data.Favorite
 import com.howdiedoodies.chatterby.viewmodel.FavoriteViewModel
 
