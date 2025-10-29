@@ -21,6 +21,10 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         findViewById<Toolbar>(R.id.toolbar).setupWithNavController(navController, appBarConfiguration)
+
+        findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.fab).setOnClickListener {
+            navController.navigate(R.id.action_favoriteFragment_to_searchFragment)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
