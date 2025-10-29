@@ -20,9 +20,9 @@ class OnlineStatusWorker(appContext: Context, params: WorkerParameters) :
         val all = dao.getAll().first()
 
         all.forEach { fave ->
-            if (isUserOnline(fave.username)) {
-                dao.updateLastOnline(fave.username, System.currentTimeMillis())
-            }
+            val isOnline = isUserOnline(fave.username)
+            val timestamp = if (isOnline) System.currentTimeMillis() else fave.lastOnline
+            dao.updateStatus(fave.username, isOnline, timestamp)
         }
         Result.success()
     }
