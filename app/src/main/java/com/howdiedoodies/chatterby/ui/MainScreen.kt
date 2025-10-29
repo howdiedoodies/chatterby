@@ -10,7 +10,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.howdiedoodies.chatterby.data.Favorite
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.howdiedoodies.chatterby.viewmodel.FavoriteViewModel
 
 @Composable

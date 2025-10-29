@@ -12,9 +12,6 @@ interface FavoriteDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(favorite: Favorite)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(favorites: List<Favorite>)
-
     @Delete
     suspend fun delete(favorite: Favorite)
 
@@ -24,6 +21,6 @@ interface FavoriteDao {
     @Query("UPDATE favorites SET thumbnailPath = :path WHERE username = :username")
     suspend fun updateThumbnail(username: String, path: String?)
 
-    @Query("UPDATE favorites SET gender = :gender, age = :age, location = :location, lastChecked = :lastChecked WHERE username = :username")
-    suspend fun updateDetails(username: String, gender: String?, age: Int?, location: String?, lastChecked: Long)
+    @Query("UPDATE favorites SET currentGoal = :current, targetGoal = :target WHERE username = :username")
+    suspend fun updateGoal(username: String, current: Int?, target: Int?)
 }

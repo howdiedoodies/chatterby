@@ -1,56 +1,62 @@
 package com.howdiedoodies.chatterby.ui
 
+import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.howdiedoodies.chatterby.R
 import com.howdiedoodies.chatterby.data.Favorite
 import com.howdiedoodies.chatterby.databinding.ItemFavoriteBinding
 
 class FavoriteAdapter(
-    private val onClick: (String, Boolean) -> Unit
-) : ListAdapter<Favorite, FavoriteAdapter.VH>(DiffCallback) {
+    private val onClick: (Favorite) -> Unit
+) : ListAdapter<Favorite, FavoriteAdapter.ViewHolder>(DiffCallback) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemFavoriteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return VH(binding, onClick)
+        return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: VH, position: Int) = holder.bind(getItem(position))
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(getItem(position))
+    }
 
-    class VH(
-        private val binding: ItemFavoriteBinding,
-        private val onClick: (String, Boolean) -> Unit
-    ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(fav: Favorite) {
-            binding.usernameText.text = fav.username
-            binding.ageText.text = fav.age?.toString()
-            binding.locationText.text = fav.location
-            binding.genderIcon.setImageResource(
-                when (fav.gender) {
-                    "m" -> R.drawable.ic_male
-                    "f" -> R.drawable.ic_female
-                    "t" -> R.drawable.ic_trans
-                    else -> R.drawable.ic_other
-                }
-            )
-            val now = System.currentTimeMillis()
-            val last = fav.lastOnline
-            if (fav.isOnline) {
+    inner class ViewHolder(private val binding: ItemFavoriteBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(favorite: Favorite) {
+            binding.usernameText.text = favorite.username
+            binding.subjectText.text = favorite.subject
+            binding.ageGenderText.text = "${favorite.age} ${favorite.gender?.uppercase()}"
+            binding.locationText.text = favorite.location
+            if (favorite.isOnline) {
                 binding.statusBadge.text = "LIVE"
-                binding.statusBadge.setTextColor(itemView.context.getColor(android.R.color.holo_green_dark))
+                binding.statusBadge.setTextColor(itemView.context.getColor(R.color.md_theme_light_primary))
             } else {
-                binding.statusBadge.text = last?.let { DateUtils.getRelativeTimeSpanString(it, now, DateUtils.MINUTE_IN_MILLIS) } ?: "Never"
-                binding.statusBadge.setTextColor(itemView.context.getColor(android.R.color.darker_gray))
+                binding.statusBadge.text = favorite.lastOnline?.let {
+                    DateUtils.getRelativeTimeSpanString(it, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS)
+                } ?: "Offline"
+                binding.statusBadge.setTextColor(itemView.context.getColor(R.color.md_theme_light_onSurfaceVariant))
             }
-            binding.root.setOnClickListener { onClick(fav.username, false) }
-            binding.chatOnlyButton.setOnClickListener { onClick(fav.username, true) }
+            Glide.with(itemView.context)
+                .load(favorite.thumbnailPath)
+                .placeholder(R.drawable.ic_avatar_placeholder)
+                .into(binding.thumbnail)
+            binding.root.setOnClickListener {
+                onClick(favorite)
+            }
         }
     }
 
     object DiffCallback : DiffUtil.ItemCallback<Favorite>() {
-        override fun areItemsTheSame(old: Favorite, new: Favorite) = old.username == new.username
-        override fun areContentsTheSame(old: Favorite, new: Favorite) = old == new
+        override fun areItemsTheSame(oldItem: Favorite, newItem: Favorite): Boolean {
+            return oldItem.username == newItem.username
+        }
+
+        override fun areContentsTheSame(oldItem: Favorite, newItem: Favorite): Boolean {
+            return oldItem == newItem
+        }
     }
 }
