@@ -12,6 +12,9 @@ interface FavoriteDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(favorite: Favorite)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(favorites: List<Favorite>)
+
     @Delete
     suspend fun delete(favorite: Favorite)
 
