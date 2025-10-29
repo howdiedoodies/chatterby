@@ -1,4 +1,4 @@
-﻿package com.howdiedoodies.chatterby.ui
+package com.howdiedoodies.chatterby.ui
 
 import android.os.Bundle
 import android.view.*
@@ -7,7 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.howdiedoodies.chatterby.R
 import com.howdiedoodies.chatterby.databinding.FragmentFavoriteBinding
 import com.howdiedoodies.chatterby.viewmodel.FavoriteViewModel
 import kotlinx.coroutines.launch
