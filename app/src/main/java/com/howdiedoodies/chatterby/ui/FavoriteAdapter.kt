@@ -1,6 +1,5 @@
-﻿package com.howdiedoodies.chatterby.ui
+package com.howdiedoodies.chatterby.ui
 
-import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -26,9 +25,19 @@ class FavoriteAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(fav: Favorite) {
             binding.usernameText.text = fav.username
+            binding.ageText.text = fav.age?.toString()
+            binding.locationText.text = fav.location
+            binding.genderIcon.setImageResource(
+                when (fav.gender) {
+                    "m" -> R.drawable.ic_male
+                    "f" -> R.drawable.ic_female
+                    "t" -> R.drawable.ic_trans
+                    else -> R.drawable.ic_other
+                }
+            )
             val now = System.currentTimeMillis()
             val last = fav.lastOnline
-            if (last != null && now - last < 120_000) {
+            if (fav.isOnline) {
                 binding.statusBadge.text = "LIVE"
                 binding.statusBadge.setTextColor(itemView.context.getColor(android.R.color.holo_green_dark))
             } else {
@@ -36,6 +45,7 @@ class FavoriteAdapter(
                 binding.statusBadge.setTextColor(itemView.context.getColor(android.R.color.darker_gray))
             }
             binding.root.setOnClickListener { onClick(fav.username, false) }
+            binding.chatOnlyButton.setOnClickListener { onClick(fav.username, true) }
         }
     }
 

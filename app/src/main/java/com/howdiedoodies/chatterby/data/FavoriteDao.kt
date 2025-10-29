@@ -24,6 +24,6 @@ interface FavoriteDao {
     @Query("UPDATE favorites SET thumbnailPath = :path WHERE username = :username")
     suspend fun updateThumbnail(username: String, path: String?)
 
-    @Query("UPDATE favorites SET roomStatus = :status, subject = :subject, lastChecked = :lastChecked WHERE username = :username")
-    suspend fun updateDetails(username: String, status: String?, subject: String?, lastChecked: Long)
+    @Query("UPDATE favorites SET gender = :gender, age = :age, location = :location, lastChecked = :lastChecked WHERE username = :username")
+    suspend fun updateDetails(username: String, gender: String?, age: Int?, location: String?, lastChecked: Long)
 }
