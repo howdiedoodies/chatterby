@@ -9,17 +9,19 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.howdiedoodies.chatterby.R
+import com.howdiedoodies.chatterby.databinding.FragmentFavoriteBinding
 import com.howdiedoodies.chatterby.viewmodel.FavoriteViewModel
 import kotlinx.coroutines.launch
 
 class FavoriteFragment : Fragment() {
     private val viewModel: FavoriteViewModel by viewModels()
     private lateinit var adapter: FavoriteAdapter
+    private var _binding: FragmentFavoriteBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.fragment_favorite, container, false)
+        _binding = FragmentFavoriteBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -30,7 +32,7 @@ class FavoriteFragment : Fragment() {
             findNavController().navigate(action)
         }
 
-        view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerView).apply {
+        binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@FavoriteFragment.adapter
         }
@@ -41,9 +43,14 @@ class FavoriteFragment : Fragment() {
             }
         }
 
-        view.findViewById<SwipeRefreshLayout>(R.id.refresh).setOnRefreshListener {
+        binding.refresh.setOnRefreshListener {
             viewModel.refreshNow()
-            view.findViewById<SwipeRefreshLayout>(R.id.refresh).isRefreshing = false
+            binding.refresh.isRefreshing = false
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

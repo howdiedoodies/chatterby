@@ -2,49 +2,40 @@
 
 import android.text.format.DateUtils
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.howdiedoodies.chatterby.R
 import com.howdiedoodies.chatterby.data.Favorite
+import com.howdiedoodies.chatterby.databinding.ItemFavoriteBinding
 
 class FavoriteAdapter(
     private val onClick: (String, Boolean) -> Unit
 ) : ListAdapter<Favorite, FavoriteAdapter.VH>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_favorite, parent, false)
-        return VH(view, onClick)
+        val binding = ItemFavoriteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return VH(binding, onClick)
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) = holder.bind(getItem(position))
 
     class VH(
-        itemView: View,
+        private val binding: ItemFavoriteBinding,
         private val onClick: (String, Boolean) -> Unit
-    ) : RecyclerView.ViewHolder(itemView) {
-        private val username: TextView = itemView.findViewById(R.id.username)
-        private val status: TextView = itemView.findViewById(R.id.status)
-        private val btnOpen: Button = itemView.findViewById(R.id.btnOpen)
-        private val chatOnly: Button = itemView.findViewById(R.id.chatOnly)
-
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(fav: Favorite) {
-            username.text = fav.username
+            binding.usernameText.text = fav.username
             val now = System.currentTimeMillis()
             val last = fav.lastOnline
             if (last != null && now - last < 120_000) {
-                status.text = "LIVE"
-                status.setTextColor(itemView.context.getColor(android.R.color.holo_green_dark))
+                binding.statusBadge.text = "LIVE"
+                binding.statusBadge.setTextColor(itemView.context.getColor(android.R.color.holo_green_dark))
             } else {
-                status.text = last?.let { DateUtils.getRelativeTimeSpanString(it, now, DateUtils.MINUTE_IN_MILLIS) } ?: "Never"
-                status.setTextColor(itemView.context.getColor(android.R.color.darker_gray))
+                binding.statusBadge.text = last?.let { DateUtils.getRelativeTimeSpanString(it, now, DateUtils.MINUTE_IN_MILLIS) } ?: "Never"
+                binding.statusBadge.setTextColor(itemView.context.getColor(android.R.color.darker_gray))
             }
-            btnOpen.setOnClickListener { onClick(fav.username, false) }
-            chatOnly.setOnClickListener { onClick(fav.username, true) }
+            binding.root.setOnClickListener { onClick(fav.username, false) }
         }
     }
 
