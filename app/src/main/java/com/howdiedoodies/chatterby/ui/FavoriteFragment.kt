@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.howdiedoodies.chatterby.databinding.FragmentFavoriteBinding
 import com.howdiedoodies.chatterby.viewmodel.FavoriteViewModel
 import kotlinx.coroutines.launch
@@ -19,7 +20,7 @@ class FavoriteFragment : Fragment() {
     private var _binding: FragmentFavoriteBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): SwipeRefreshLayout {
         _binding = FragmentFavoriteBinding.inflate(inflater, container, false)
         return binding.root
     }
