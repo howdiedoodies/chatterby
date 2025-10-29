@@ -1,39 +1,39 @@
-﻿package com.howdiedoodies.chatterby.worker
+package com.howdiedoodies.chatterby.worker
 
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.howdiedoodies.chatterby.api.ChaturbateApi
 import com.howdiedoodies.chatterby.data.AppDatabase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import kotlinx.coroutines.flow.first
-import okhttp3.OkHttpClient
-import okhttp3.Request
+import kotlinx.coroutines.withContext
 
 class OnlineStatusWorker(appContext: Context, params: WorkerParameters) :
     CoroutineWorker(appContext, params) {
 
-    private val client = OkHttpClient()
+    private val api = ChaturbateApi()
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         val dao = AppDatabase.getDatabase(applicationContext).favoriteDao()
         val all = dao.getAll().first()
 
         all.forEach { fave ->
-            val isOnline = isUserOnline(fave.username)
-            val timestamp = if (isOnline) System.currentTimeMillis() else fave.lastOnline
-            dao.updateStatus(fave.username, isOnline, timestamp)
+            val events = api.getEvents("YOUR_TOKEN", fave.username) // TODO: Replace with your token
+            val broadcastStart = events.find { it.method == "broadcastStart" }
+            val broadcastStop = events.find { it.method == "broadcastStop" }
+            val subjectChange = events.find { it.method == "roomSubjectChange" }
+
+            if (broadcastStart != null) {
+                dao.updateStatus(fave.username, true, System.currentTimeMillis())
+            } else if (broadcastStop != null) {
+                dao.updateStatus(fave.username, false, fave.lastOnline)
+            }
+
+            if (subjectChange != null) {
+                dao.updateDetails(fave.username, null, subjectChange.subject?.subject, System.currentTimeMillis())
+            }
         }
         Result.success()
-    }
-
-    private suspend fun isUserOnline(username: String): Boolean = try {
-        val req = Request.Builder()
-            .url("https://chaturbate.com/api/chat/videoviewers/?room=$username")
-            .build()
-        val resp = client.newCall(req).execute()
-        resp.isSuccessful && resp.body?.string()?.contains("\"is_hd\":true") == true
-    } catch (e: Exception) {
-        false
     }
 }
