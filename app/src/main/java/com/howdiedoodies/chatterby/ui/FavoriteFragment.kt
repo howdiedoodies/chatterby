@@ -45,6 +45,10 @@ class FavoriteFragment : Fragment() {
                 favoriteAdapter.submitList(it)
             }
         }
+
+        binding.refreshLayout.setOnRefreshListener {
+            viewModel.refreshFavorites()
+        }
     }
 
     override fun onDestroyView() {

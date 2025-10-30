@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Chatterby</string>
+    <string name="add_favorite">Add Favorite</string>
 </resources>

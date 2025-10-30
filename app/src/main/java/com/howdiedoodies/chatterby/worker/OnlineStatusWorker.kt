@@ -1,4 +1,4 @@
-package com.howdiedoodies.chatterby.worker
+﻿package com.howdiedoodies.chatterby.worker
 
 import android.content.Context
 import androidx.work.CoroutineWorker
@@ -6,41 +6,34 @@ import androidx.work.WorkerParameters
 import com.howdiedoodies.chatterby.data.AppDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.jsoup.Jsoup
+import kotlinx.coroutines.flow.first
+import okhttp3.OkHttpClient
+import okhttp3.Request
 
-class OnlineStatusWorker(
-    appContext: Context,
-    workerParams: WorkerParameters
-) : CoroutineWorker(appContext, workerParams) {
+class OnlineStatusWorker(appContext: Context, params: WorkerParameters) :
+    CoroutineWorker(appContext, params) {
+
+    private val client = OkHttpClient()
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
-        try {
-            val dao = AppDatabase.getDatabase(applicationContext).favoriteDao()
-            val favorites = dao.getAll()
-            for (favorite in favorites) {
-                val url = "https://chaturbate.com/${favorite.username}"
-                val doc = Jsoup.connect(url).get()
-                val isOnline = doc.select(".status.online").isNotEmpty()
-                val subject = doc.select(".subject").text()
-                val age = doc.select(".age").text().toIntOrNull()
-                val gender = doc.select(".gender").text()
-                val location = doc.select(".location").text()
-                val thumbnail = doc.select(".thumbnail img").attr("src")
+        val dao = AppDatabase.getDatabase(applicationContext).favoriteDao()
+        val all = dao.getAll().first()
 
-                val updatedFavorite = favorite.copy(
-                    isOnline = isOnline,
-                    subject = subject,
-                    age = age,
-                    gender = gender,
-                    location = location,
-                    lastOnline = if (isOnline) System.currentTimeMillis() else favorite.lastOnline,
-                    thumbnailPath = thumbnail
-                )
-                dao.update(updatedFavorite)
+        all.forEach { fave ->
+            if (isUserOnline(fave.username)) {
+                dao.updateLastOnline(fave.username, System.currentTimeMillis())
             }
-            Result.success()
-        } catch (e: Exception) {
-            Result.failure()
         }
+        Result.success()
+    }
+
+    private suspend fun isUserOnline(username: String): Boolean = try {
+        val req = Request.Builder()
+            .url("https://chaturbate.com/api/chat/videoviewers/?room=$username")
+            .build()
+        val resp = client.newCall(req).execute()
+        resp.isSuccessful && resp.body?.string()?.contains("\"is_hd\":true") == true
+    } catch (e: Exception) {
+        false
     }
 }

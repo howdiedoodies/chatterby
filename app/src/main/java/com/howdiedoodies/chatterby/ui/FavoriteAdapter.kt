@@ -1,55 +1,62 @@
-﻿package com.howdiedoodies.chatterby.ui
+package com.howdiedoodies.chatterby.ui
 
 import android.text.format.DateUtils
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.howdiedoodies.chatterby.R
 import com.howdiedoodies.chatterby.data.Favorite
+import com.howdiedoodies.chatterby.databinding.ItemFavoriteBinding
 
 class FavoriteAdapter(
-    private val onClick: (String, Boolean) -> Unit
-) : ListAdapter<Favorite, FavoriteAdapter.VH>(DiffCallback) {
+    private val onClick: (Favorite) -> Unit
+) : ListAdapter<Favorite, FavoriteAdapter.ViewHolder>(DiffCallback) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_favorite, parent, false)
-        return VH(view, onClick)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding = ItemFavoriteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: VH, position: Int) = holder.bind(getItem(position))
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(getItem(position))
+    }
 
-    class VH(
-        itemView: View,
-        private val onClick: (String, Boolean) -> Unit
-    ) : RecyclerView.ViewHolder(itemView) {
-        private val username: TextView = itemView.findViewById(R.id.username)
-        private val status: TextView = itemView.findViewById(R.id.status)
-        private val btnOpen: Button = itemView.findViewById(R.id.btnOpen)
-        private val chatOnly: Button = itemView.findViewById(R.id.chatOnly)
-
-        fun bind(fav: Favorite) {
-            username.text = fav.username
-            val now = System.currentTimeMillis()
-            val last = fav.lastOnline
-            if (last != null && now - last < 120_000) {
-                status.text = "LIVE"
-                status.setTextColor(itemView.context.getColor(android.R.color.holo_green_dark))
+    inner class ViewHolder(private val binding: ItemFavoriteBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(favorite: Favorite) {
+            binding.usernameText.text = favorite.username
+            binding.subjectText.text = favorite.subject
+            binding.ageGenderText.text = "${favorite.age} ${favorite.gender?.uppercase()}"
+            binding.locationText.text = favorite.location
+            if (favorite.isOnline) {
+                binding.statusBadge.text = "LIVE"
+                binding.statusBadge.setTextColor(itemView.context.getColor(R.color.md_theme_light_primary))
             } else {
-                status.text = last?.let { DateUtils.getRelativeTimeSpanString(it, now, DateUtils.MINUTE_IN_MILLIS) } ?: "Never"
-                status.setTextColor(itemView.context.getColor(android.R.color.darker_gray))
+                binding.statusBadge.text = favorite.lastOnline?.let {
+                    DateUtils.getRelativeTimeSpanString(it, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS)
+                } ?: "Offline"
+                binding.statusBadge.setTextColor(itemView.context.getColor(R.color.md_theme_light_onSurfaceVariant))
             }
-            btnOpen.setOnClickListener { onClick(fav.username, false) }
-            chatOnly.setOnClickListener { onClick(fav.username, true) }
+            Glide.with(itemView.context)
+                .load(favorite.thumbnailPath)
+                .placeholder(R.drawable.ic_avatar_placeholder)
+                .into(binding.thumbnail)
+            binding.root.setOnClickListener {
+                onClick(favorite)
+            }
         }
     }
 
     object DiffCallback : DiffUtil.ItemCallback<Favorite>() {
-        override fun areItemsTheSame(old: Favorite, new: Favorite) = old.username == new.username
-        override fun areContentsTheSame(old: Favorite, new: Favorite) = old == new
+        override fun areItemsTheSame(oldItem: Favorite, newItem: Favorite): Boolean {
+            return oldItem.username == newItem.username
+        }
+
+        override fun areContentsTheSame(oldItem: Favorite, newItem: Favorite): Boolean {
+            return oldItem == newItem
+        }
     }
 }
