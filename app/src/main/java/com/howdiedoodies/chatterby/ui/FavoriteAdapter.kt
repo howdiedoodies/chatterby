@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide
 import com.howdiedoodies.chatterby.R
 import com.howdiedoodies.chatterby.data.Favorite
 import com.howdiedoodies.chatterby.databinding.ItemFavoriteBinding
+import android.text.format.DateUtils
 
 class FavoriteAdapter(
     private val onClick: (Favorite) -> Unit
