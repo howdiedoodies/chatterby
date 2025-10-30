@@ -11,6 +11,10 @@ data class Favorite(
     val lastOnline: Long? = null,
     val isOnline: Boolean = false,
     val thumbnailPath: String? = null,
+    val subject: String? = null,
+    val age: Int? = null,
+    val gender: String? = null,
+    val location: String? = null,
     val currentGoal: Int? = null,
     val targetGoal: Int? = null
 )

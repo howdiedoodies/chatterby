@@ -12,6 +12,9 @@ interface FavoriteDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(favorite: Favorite)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(favorites: List<Favorite>)
+
     @Delete
     suspend fun delete(favorite: Favorite)
 
@@ -23,4 +26,7 @@ interface FavoriteDao {
 
     @Query("UPDATE favorites SET currentGoal = :current, targetGoal = :target WHERE username = :username")
     suspend fun updateGoal(username: String, current: Int?, target: Int?)
+
+    @Query("UPDATE favorites SET lastOnline = :timestamp WHERE username = :username")
+    suspend fun updateLastOnline(username: String, timestamp: Long)
 }
