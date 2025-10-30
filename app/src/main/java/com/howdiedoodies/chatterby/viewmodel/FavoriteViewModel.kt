@@ -24,4 +24,10 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
             favoriteDao.delete(favorite)
         }
     }
+
+    fun refreshFavorites() {
+        val workManager = androidx.work.WorkManager.getInstance(getApplication())
+        val request = androidx.work.OneTimeWorkRequestBuilder<com.howdiedoodies.chatterby.worker.OnlineStatusWorker>().build()
+        workManager.enqueue(request)
+    }
 }
