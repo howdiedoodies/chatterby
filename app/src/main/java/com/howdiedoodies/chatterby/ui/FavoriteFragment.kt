@@ -46,7 +46,7 @@ class FavoriteFragment : Fragment() {
             }
         }
 
-        binding.refreshLayout.setOnRefreshListener {
+        binding.refresh.setOnRefreshListener {
             viewModel.refreshFavorites()
         }
     }
