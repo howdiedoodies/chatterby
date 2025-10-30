@@ -4,5 +4,6 @@ plugins {
     id("org.jetbrains.kotlin.android") version "2.1.21" apply false
     id("org.jetbrains.kotlin.kapt") version "2.1.21" apply false
     id("org.jetbrains.kotlin.plugin.compose") version "2.1.21" apply false
+    id("androidx.navigation.safeargs.kotlin") version "2.7.7" apply false
 }
 val kotlinJvmTarget by extra("17")
