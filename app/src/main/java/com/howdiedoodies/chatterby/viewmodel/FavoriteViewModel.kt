@@ -5,17 +5,22 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.howdiedoodies.chatterby.data.AppDatabase
 import com.howdiedoodies.chatterby.data.Favorite
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class FavoriteViewModel(application: Application) : AndroidViewModel(application) {
     private val favoriteDao = AppDatabase.getDatabase(application).favoriteDao()
-    val favorites: StateFlow<List<Favorite>> = favoriteDao.getAll().stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+    val favorites: StateFlow<List<Favorite>> = favoriteDao.getAll().stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        emptyList()
+    )
 
     fun addFavorite(username: String) {
         viewModelScope.launch {
-            favoriteDao.insert(Favorite(username = username))
+            favoriteDao.insert(Favorite(username))
         }
     }
 
@@ -26,8 +31,10 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun refreshFavorites() {
-        val workManager = androidx.work.WorkManager.getInstance(getApplication())
-        val request = androidx.work.OneTimeWorkRequestBuilder<com.howdiedoodies.chatterby.worker.OnlineStatusWorker>().build()
-        workManager.enqueue(request)
+        viewModelScope.launch {
+            val workManager = androidx.work.WorkManager.getInstance(getApplication())
+            val request = androidx.work.OneTimeWorkRequestBuilder<com.howdiedoodies.chatterby.worker.OnlineStatusWorker>().build()
+            workManager.enqueue(request)
+        }
     }
 }

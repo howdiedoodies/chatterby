@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_favoriteFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_favoriteFragment_to_roomFragment"
+            app:destination="@id/roomFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -27,8 +30,5 @@
         <argument
             android:name="username"
             app:argType="string" />
-        <action
-            android:id="@+id/action_roomFragment_to_favoriteFragment"
-            app:destination="@id/favoriteFragment" />
     </fragment>
 </navigation>
