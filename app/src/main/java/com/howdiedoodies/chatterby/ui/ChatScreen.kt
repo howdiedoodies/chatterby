@@ -22,7 +22,9 @@ import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatScreen(navController: NavController) {
+fun ChatScreen(navController: NavController, viewModel: com.howdiedoodies.chatterby.viewmodel.ChatViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+    val uiState by viewModel.uiState.collectAsState()
+
     Scaffold(
         topBar = {
             TopAppBar(title = { Text("Chat Room") })
@@ -33,15 +35,15 @@ fun ChatScreen(navController: NavController) {
                     Icon(Icons.Default.Face, contentDescription = "Emoji")
                 }
                 TextField(
-                    value = "",
-                    onValueChange = {},
+                    value = uiState.currentMessage,
+                    onValueChange = { viewModel.onMessageChanged(it) },
                     modifier = Modifier.weight(1f),
                     placeholder = { Text("Type a message") }
                 )
                 IconButton(onClick = { /* TODO: Send GIF */ }) {
                     Icon(Icons.Default.Add, contentDescription = "GIF")
                 }
-                IconButton(onClick = { /* TODO: Send message */ }) {
+                IconButton(onClick = { viewModel.sendMessage() }) {
                     Icon(Icons.Default.Send, contentDescription = "Send")
                 }
             }
@@ -52,9 +54,8 @@ fun ChatScreen(navController: NavController) {
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            // Mock messages
-            items(10) { index ->
-                Text("User ${index % 2 + 1}: Hello! This is message #$index")
+            items(uiState.messages) { message ->
+                Text("${message.user}: ${message.text}")
             }
         }
     }
