@@ -32,17 +32,15 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
     fun refreshFavorites() {
         viewModelScope.launch {
             _isRefreshing.value = true
-            // TODO: This is inefficient. We should explore a batch API endpoint if one exists,
-            // or at least introduce some concurrency here.
-            favorites.value.forEach { favorite ->
-                try {
-                    val searchResult = com.howdiedoodies.chatterby.data.NetworkModule.api.search(favorite.username)
-                    val cam = searchResult.results.firstOrNull { it.username.equals(favorite.username, ignoreCase = true) }
-                    val isOnline = cam?.roomStatus == "public"
-                    favoriteDao.updateStatus(favorite.username, isOnline, System.currentTimeMillis())
-                } catch (e: Exception) {
-                    // Handle network errors
+            try {
+                val usernames = favorites.value.joinToString(",") { it.username }
+                val searchResult = com.howdiedoodies.chatterby.data.NetworkModule.api.search("", usernames)
+                searchResult.results.forEach { cam ->
+                    val isOnline = cam.roomStatus == "public"
+                    favoriteDao.updateStatus(cam.username, isOnline, System.currentTimeMillis())
                 }
+            } catch (e: Exception) {
+                // Handle network errors
             }
             _isRefreshing.value = false
         }

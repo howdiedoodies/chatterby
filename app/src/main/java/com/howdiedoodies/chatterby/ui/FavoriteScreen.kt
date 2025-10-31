@@ -8,9 +8,11 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,7 +27,11 @@ fun FavoriteScreen(navController: NavController, viewModel: FavoriteViewModel) {
     val favorites by viewModel.favorites.collectAsState(initial = emptyList())
     val isRefreshing by viewModel.isRefreshing.collectAsState()
 
-    com.google.accompanist.swiperefresh.SwipeRefresh(
+    Column {
+        Button(onClick = { navController.navigate("login") }) {
+            Text("Login to Import Favorites")
+        }
+        com.google.accompanist.swiperefresh.SwipeRefresh(
         state = com.google.accompanist.swiperefresh.rememberSwipeRefreshState(isRefreshing),
         onRefresh = { viewModel.refreshFavorites() }
     ) {

@@ -26,12 +26,17 @@ fun SearchScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     Column(modifier = Modifier.padding(16.dp)) {
-        TextField(
-            value = uiState.query,
-            onValueChange = { viewModel.onQueryChanged(it) },
-            modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text("Search streamers...") }
-        )
+        Row(modifier = Modifier.fillMaxWidth()) {
+            TextField(
+                value = uiState.query,
+                onValueChange = { viewModel.onQueryChanged(it) },
+                modifier = Modifier.weight(1f),
+                placeholder = { Text("Search streamers...") }
+            )
+            Button(onClick = { viewModel.search() }) {
+                Text("Search")
+            }
+        }
         LazyColumn {
             items(uiState.results) { cam ->
                 Row(

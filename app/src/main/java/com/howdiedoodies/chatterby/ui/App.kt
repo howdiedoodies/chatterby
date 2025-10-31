@@ -58,6 +58,7 @@ fun App() {
             composable("room/{username}") { backStackEntry ->
                 RoomScreen(navController, backStackEntry.arguments?.getString("username") ?: "")
             }
+            composable("login") { LoginScreen(navController) }
         }
     }
 }

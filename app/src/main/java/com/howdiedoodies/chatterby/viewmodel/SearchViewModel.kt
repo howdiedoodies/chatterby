@@ -22,23 +22,20 @@ class SearchViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(SearchUiState())
     val uiState: StateFlow<SearchUiState> = _uiState.asStateFlow()
 
-    init {
-        _uiState
-            .debounce(500)
-            .onEach { state ->
-                if (state.query.isNotBlank()) {
-                    try {
-                        val searchResult = NetworkModule.api.search(state.query)
-                        _uiState.value = _uiState.value.copy(results = searchResult.results)
-                    } catch (e: Exception) {
-                        // Handle network errors
-                    }
-                }
-            }
-            .launchIn(viewModelScope)
-    }
-
     fun onQueryChanged(query: String) {
         _uiState.value = _uiState.value.copy(query = query)
+    }
+
+    fun search() {
+        viewModelScope.launch {
+            if (_uiState.value.query.isNotBlank()) {
+                try {
+                    val searchResult = NetworkModule.api.search(_uiState.value.query)
+                    _uiState.value = _uiState.value.copy(results = searchResult.results)
+                } catch (e: Exception) {
+                    // Handle network errors
+                }
+            }
+        }
     }
 }

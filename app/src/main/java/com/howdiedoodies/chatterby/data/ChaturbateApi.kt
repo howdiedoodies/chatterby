@@ -9,6 +9,7 @@ interface ChaturbateApi {
     // It may be unstable or change without notice.
     @GET("api/chaturbate/search/results/")
     suspend fun search(
-        @Query("query") query: String
+        @Query("query") query: String,
+        @Query("usernames") usernames: String? = null
     ): SearchResult
 }
