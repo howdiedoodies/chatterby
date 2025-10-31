@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Chatterby</string>
     <string name="add_favorite">Add Favorite</string>
+    <string name="favorites">Favorites</string>
+    <string name="search">Search</string>
+    <string name="chat">Chat</string>
 </resources>

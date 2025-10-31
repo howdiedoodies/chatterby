@@ -1,0 +1,52 @@
+package com.howdiedoodies.chatterby.ui
+
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Card
+import androidx.compose.material3.Text
+import com.howdiedoodies.chatterby.data.Favorite
+import com.howdiedoodies.chatterby.viewmodel.FavoriteViewModel
+
+@Composable
+fun FavoriteScreen(navController: NavController, viewModel: FavoriteViewModel = viewModel()) {
+    val favorites by viewModel.favorites.collectAsState(initial = emptyList())
+    LazyColumn {
+        items(favorites) { favorite ->
+            FavoriteItem(favorite)
+        }
+    }
+}
+
+@Composable
+fun FavoriteItem(favorite: Favorite) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = favorite.username,
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                text = if (favorite.isOnline) "LIVE" else "Offline",
+                color = if (favorite.isOnline) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+            )
+        }
+    }
+}
