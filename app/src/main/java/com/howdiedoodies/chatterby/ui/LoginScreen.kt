@@ -35,14 +35,14 @@ class WebAppInterface(
 @Composable
 fun LoginScreen(navController: NavController) {
     AndroidView(factory = {
-        val favoriteDao = AppDatabase.getDatabase(it.context).favoriteDao()
+        val favoriteDao = AppDatabase.getDatabase(it).favoriteDao()
         WebView(it).apply {
             layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
             settings.javaScriptEnabled = true
-            addJavascriptInterface(WebAppInterface(it.context, favoriteDao), "Android")
+            addJavascriptInterface(WebAppInterface(it, favoriteDao), "Android")
             webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
