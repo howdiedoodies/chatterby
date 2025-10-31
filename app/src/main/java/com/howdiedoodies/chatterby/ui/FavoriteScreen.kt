@@ -14,13 +14,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.foundation.clickable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.howdiedoodies.chatterby.data.Favorite
 import com.howdiedoodies.chatterby.viewmodel.FavoriteViewModel
 
 @Composable
-fun FavoriteScreen(navController: NavController, viewModel: FavoriteViewModel = viewModel()) {
+fun FavoriteScreen(navController: NavController, viewModel: FavoriteViewModel) {
     val favorites by viewModel.favorites.collectAsState(initial = emptyList())
     val isRefreshing by viewModel.isRefreshing.collectAsState()
 
@@ -30,18 +31,21 @@ fun FavoriteScreen(navController: NavController, viewModel: FavoriteViewModel = 
     ) {
         LazyColumn {
             items(favorites) { favorite ->
-                FavoriteItem(favorite)
+                FavoriteItem(favorite) {
+                    navController.navigate("room/${favorite.username}")
+                }
             }
         }
     }
 }
 
 @Composable
-fun FavoriteItem(favorite: Favorite) {
+fun FavoriteItem(favorite: Favorite, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
+            .clickable(onClick = onClick)
     ) {
         Row(
             modifier = Modifier

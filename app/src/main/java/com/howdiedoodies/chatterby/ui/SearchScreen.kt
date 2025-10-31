@@ -12,18 +12,31 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 @Composable
-fun SearchScreen(navController: NavController) {
+fun SearchScreen(
+    navController: NavController,
+    viewModel: com.howdiedoodies.chatterby.viewmodel.SearchViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+    favoriteViewModel: com.howdiedoodies.chatterby.viewmodel.FavoriteViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
     Column(modifier = Modifier.padding(16.dp)) {
         TextField(
-            value = "",
-            onValueChange = {},
+            value = uiState.query,
+            onValueChange = { viewModel.onQueryChanged(it) },
             modifier = Modifier.fillMaxWidth(),
             placeholder = { Text("Search streamers...") }
         )
         LazyColumn {
-            // Mock search results
-            items(5) { index ->
-                Text("Streamer #$index")
+            items(uiState.results) { cam ->
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(cam.username)
+                    Button(onClick = { favoriteViewModel.addFavorite(cam.username) }) {
+                        Text("Add")
+                    }
+                }
             }
         }
     }

@@ -50,10 +50,14 @@ fun App() {
             }
         }
     ) { innerPadding ->
+        val favoriteViewModel: com.howdiedoodies.chatterby.viewmodel.FavoriteViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
         NavHost(navController, startDestination = Screen.Favorites.route, Modifier.padding(innerPadding)) {
-            composable(Screen.Favorites.route) { FavoriteScreen(navController) }
-            composable(Screen.Search.route) { SearchScreen(navController) }
+            composable(Screen.Favorites.route) { FavoriteScreen(navController, favoriteViewModel) }
+            composable(Screen.Search.route) { SearchScreen(navController, favoriteViewModel = favoriteViewModel) }
             composable(Screen.Chat.route) { ChatScreen(navController) }
+            composable("room/{username}") { backStackEntry ->
+                RoomScreen(navController, backStackEntry.arguments?.getString("username") ?: "")
+            }
         }
     }
 }
