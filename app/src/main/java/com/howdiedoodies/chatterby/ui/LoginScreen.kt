@@ -26,7 +26,7 @@ class WebAppInterface(
     fun importFavorites(usernames: String) {
         scope.launch {
             usernames.split(",").forEach {
-                favoriteDao.insert(Favorite(it, false, null, null, null, null))
+                favoriteDao.insert(Favorite(username = it))
             }
         }
     }
@@ -42,7 +42,7 @@ fun LoginScreen(navController: NavController) {
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
             settings.javaScriptEnabled = true
-            addJavascriptInterface(WebAppInterface(context, favoriteDao), "Android")
+            addJavascriptInterface(WebAppInterface(it.context, favoriteDao), "Android")
             webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
