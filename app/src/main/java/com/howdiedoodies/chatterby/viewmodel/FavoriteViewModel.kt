@@ -13,6 +13,8 @@ import kotlinx.coroutines.launch
 class FavoriteViewModel(application: Application) : AndroidViewModel(application) {
     private val favoriteDao = AppDatabase.getDatabase(application).favoriteDao()
     val favorites: StateFlow<List<Favorite>> = favoriteDao.getAll().stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+    private val _isRefreshing = kotlinx.coroutines.flow.MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
     fun addFavorite(username: String) {
         viewModelScope.launch {
@@ -27,8 +29,21 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun refreshFavorites() {
-        val workManager = androidx.work.WorkManager.getInstance(getApplication())
-        val request = androidx.work.OneTimeWorkRequestBuilder<com.howdiedoodies.chatterby.worker.OnlineStatusWorker>().build()
-        workManager.enqueue(request)
+        viewModelScope.launch {
+            _isRefreshing.value = true
+            // TODO: This is inefficient. We should explore a batch API endpoint if one exists,
+            // or at least introduce some concurrency here.
+            favorites.value.forEach { favorite ->
+                try {
+                    val searchResult = com.howdiedoodies.chatterby.data.NetworkModule.api.search(favorite.username)
+                    val cam = searchResult.results.firstOrNull { it.username.equals(favorite.username, ignoreCase = true) }
+                    val isOnline = cam?.roomStatus == "public"
+                    favoriteDao.updateStatus(favorite.username, isOnline, System.currentTimeMillis())
+                } catch (e: Exception) {
+                    // Handle network errors
+                }
+            }
+            _isRefreshing.value = false
+        }
     }
 }

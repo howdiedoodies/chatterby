@@ -22,9 +22,16 @@ import com.howdiedoodies.chatterby.viewmodel.FavoriteViewModel
 @Composable
 fun FavoriteScreen(navController: NavController, viewModel: FavoriteViewModel = viewModel()) {
     val favorites by viewModel.favorites.collectAsState(initial = emptyList())
-    LazyColumn {
-        items(favorites) { favorite ->
-            FavoriteItem(favorite)
+    val isRefreshing by viewModel.isRefreshing.collectAsState()
+
+    com.google.accompanist.swiperefresh.SwipeRefresh(
+        state = com.google.accompanist.swiperefresh.rememberSwipeRefreshState(isRefreshing),
+        onRefresh = { viewModel.refreshFavorites() }
+    ) {
+        LazyColumn {
+            items(favorites) { favorite ->
+                FavoriteItem(favorite)
+            }
         }
     }
 }
