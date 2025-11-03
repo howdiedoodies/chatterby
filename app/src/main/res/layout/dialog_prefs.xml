@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <Switch
+        android:id="@+id/switch_high_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="High-Tip Rooms Only" />
+
+    <EditText
+        android:id="@+id/et_threshold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="$ Min Goal"
+        android:inputType="number" />
+
+    <LinearLayout android:orientation="horizontal">
+        <Button android:id="@+id/btn_time_start" android:text="Start Time" />
+        <Button android:id="@+id/btn_time_end" android:text="End Time" />
+    </LinearLayout>
+
+    <Button android:id="@+id/btn_custom_sound" android:text="Notification Sound" />
+
+</LinearLayout>
